@@ -1,5 +1,5 @@
 <script context="module">
-  export async function preload(page, session) {
+  export async function preload({ params, query }) {
     const authRes = await axios.post(
       "https://strapi-mra-test.herokuapp.com/auth/local",
       {
@@ -17,14 +17,24 @@
       }
     );
 
-    return { content: pageData.data[0].content };
+    return {
+      content: pageData.data[0].content
+    };
   }
 </script>
 
 <script>
   import { onMount } from "svelte";
   import axios from "axios";
-  export let content;
+  export let content = "";
+  let photo = "";
+  onMount(async () => {
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/photos?_limit=20`
+    );
+    const photos = await res.json();
+    photo = photos[0].title;
+  });
 </script>
 
 <style>
@@ -79,3 +89,5 @@
     {@html content}
   </strong>
 </p>
+
+<p>{photo}</p>
